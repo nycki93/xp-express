@@ -2,6 +2,7 @@
 
 import express from 'express';
 import sqlite3 from 'sqlite3';
+import ejs from 'ejs';
 
 const app = express();
 const db = new sqlite3.Database('sqlite.db', (err) => {
@@ -30,11 +31,12 @@ app.get('/', (req, res) => {
     SET views=views+1
     WHERE url=="/";
   `, err => err && console.log(err));
-  db.get('SELECT * FROM pages WHERE url=="/"', (err, row) => {
+  db.get('SELECT * FROM pages WHERE url=="/"', async (err, page) => {
     if (err) {
       return console.log(err.message);
     } else {
-      res.send(`This page has been viewed ${row.views} times.`);
+      const body = await ejs.renderFile('views/index.ejs', { page });
+      res.send(body);
     }
   });
 });
