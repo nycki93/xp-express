@@ -35,11 +35,13 @@ app.get('/', (req, res) => {
     if (err) {
       return console.log(err.message);
     } else {
-      const body = await ejs.renderFile('views/index.ejs', { page });
+      const body = await ejs.renderFile('site/template/index.ejs', { page });
       res.send(body);
     }
   });
 });
+
+app.use(express.static('site/static'));
 
 app.listen(8080);
 console.log('server on http://localhost:8080');
